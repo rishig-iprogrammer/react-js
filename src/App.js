@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+
 import Person from './Person/Person';
 
 class App extends Component {
@@ -8,28 +9,32 @@ class App extends Component {
       { name : 'Max', age : 28},
       { name : 'Manu', age : 29},
       { name : 'Karen', age : 26}
-    ]
+    ],
+    showPersons : false
   }
 
   switchNameHandler = () => {
     this.setState({
       persons : [
-        { name : 'Roger', age : 28},
-        { name : 'Manu', age : 29},
-        { name : 'Karen', age : 20}
+        { id : 'a1', name : 'Roger', age : 28},
+        { id : 'a2', name : 'Manu', age : 29},
+        { id : 'a3', name : 'Karen', age : 20}
       ]
     })
   }
 
-  nameChangeHandler = (event) => {
-    this.setState({
-      persons : [
-        { name : 'Max', age : 28},
-        { name : event.target.value, age : 29},
-        { name : 'Karen', age : 26}
-      ]
-    })
+  deletePersonHandler = (personIndex) => {
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({persons : persons});
   }
+
+
+  togglePersons = () => {
+    this.setState({showPersons : !this.state.showPersons})
+  }
+
+
   render() {
     const buttonStyle = {
       padding : '10px 15px',
@@ -40,30 +45,28 @@ class App extends Component {
       borderRadius : '5px'
     }
 
+    let persons = null;
+
+    if(this.state.showPersons) {
+      persons = this.state.persons.map((person, index) => {
+        return <Person
+            deletePerson = {() => this.deletePersonHandler(index)} 
+            name={person.name}
+            age={person.age}
+            keys={person.id} />
+      })
+    }
+
     return (
       <div className="App">
 
         <button 
         style={buttonStyle}
-        onClick={this.switchNameHandler}>
-          Switch Name
+        onClick={this.togglePersons}>
+          Toggle Persons
         </button>
-        <Person 
-        name={this.state.persons[0].name} 
-        age={this.state.persons[0].age}
-        inputChange = {this.nameChangeHandler} />
 
-        <Person 
-        name={this.state.persons[1].name} 
-        age={this.state.persons[1].age}
-        inputChange = {this.nameChangeHandler} >
-          Hobbies : Dancing
-        </Person>
-
-        <Person 
-        name={this.state.persons[2].name} 
-        age={this.state.persons[2].age}
-        inputChange = {this.nameChangeHandler} />
+        {persons}
       </div>
     );
   }
