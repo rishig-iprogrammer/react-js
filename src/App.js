@@ -6,21 +6,35 @@ import Person from './Person/Person';
 class App extends Component {
   state = {
     persons : [
-      { name : 'Max', age : 28},
-      { name : 'Manu', age : 29},
-      { name : 'Karen', age : 26}
+      { id : 1, name : 'Max', age : 28},
+      { id : 2, name : 'Manu', age : 29},
+      { id : 3, name : 'Karen', age : 26}
     ],
     showPersons : false
   }
 
-  switchNameHandler = () => {
-    this.setState({
-      persons : [
-        { id : 'a1', name : 'Roger', age : 28},
-        { id : 'a2', name : 'Manu', age : 29},
-        { id : 'a3', name : 'Karen', age : 20}
-      ]
+  changeNameHandler = (event, id) => {
+    //get the index of the person from the array
+    const personIndex = this.state.persons.findIndex(currentPerson => {
+      return currentPerson.id === id
     })
+
+    //assign the element to a new variable
+    const person = {
+      ...this.state.persons[personIndex]
+    }
+
+    //update the name of the person in the new variable
+    person.name = event.target.value
+
+    //assign the global persons array to new array
+    const persons = [...this.state.persons]
+
+    //update the person element in the new array
+    persons[personIndex] = person;
+
+    //update the global array with the new persons array
+    this.setState({persons : persons})
   }
 
   deletePersonHandler = (personIndex) => {
@@ -51,9 +65,10 @@ class App extends Component {
       persons = this.state.persons.map((person, index) => {
         return <Person
             deletePerson = {() => this.deletePersonHandler(index)} 
+            change = {(event) => this.changeNameHandler(event, person.id)}
             name={person.name}
             age={person.age}
-            keys={person.id} />
+            key={person.id} />
       })
     }
 
