@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import classes from './Cockpit.css';
 
 const cockpit = props => { 
+    useEffect(() => {
+        console.log('[Cockpit.js] useEffect');
+        setTimeout(() => {
+            alert('Persons updated');
+        }, 1000);
+
+        return (()=> {
+            console.log('[Cockpit.js] cleanup work in useEffect');
+        });
+    }, []); 
+    // executes only when the second parameter value changes
+    // if second parameter is empty array `[]` then function runs only once
+
+
     let btnClasses = [];
     if(props.showPersons) {
         btnClasses.push(classes.Red);
@@ -19,4 +33,4 @@ const cockpit = props => {
     );
 }
 
-export default cockpit;
+export default React.memo(cockpit);
