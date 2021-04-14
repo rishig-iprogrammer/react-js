@@ -4,6 +4,8 @@ import classes from './App.css';
 
 import Cockpit from '../components/Cockpit/Cockpit';
 import Persons from '../components/Persons/Persons';
+import Aux from '../hoc/Aux';
+import withClass from '../hoc/withClass';
 
 class App extends Component {
   state = {
@@ -48,11 +50,15 @@ class App extends Component {
 
 
   togglePersons = () => {
-    this.setState({showPersons : !this.state.showPersons})
+    this.setState((prevState, props) => {
+      return { showPersons : !prevState.showPersons }
+    });
   }
 
   toggleCockpit = () => {
-    this.setState({showCockpit : !this.state.showCockpit})
+    this.setState((prevState, props) => {
+      return { showCockpit : !prevState.showCockpit }
+    });
   }
 
 
@@ -68,7 +74,7 @@ class App extends Component {
     }
 
     return (
-      <div className={classes.App}>
+      <Aux>
         <button
         onClick={this.toggleCockpit}>Toggle Cockpit</button>
         {this.state.showCockpit ? <Cockpit
@@ -76,9 +82,9 @@ class App extends Component {
           showPersons = {this.state.showPersons} 
           clicked = {this.togglePersons} /> : null}
         {persons}
-      </div>
+      </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
